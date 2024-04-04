@@ -90,7 +90,7 @@ def verificar_ids_existentes(ids, table, coluna):
   existing_ids_df = pd.read_sql(query, con=engine)
     
   existing_ids = existing_ids_df[f"{coluna}_ID"].astype(str).tolist()
-  print(existing_ids)
+  
    
 
   ids_nao_existentes = [id for id in ids if id not in existing_ids]
@@ -129,4 +129,3 @@ convertendo_para_df(fields_conjunto, params_conjunto, "conjunto_id", "CONJUNTO")
 
 
 
-#03.04.2024
