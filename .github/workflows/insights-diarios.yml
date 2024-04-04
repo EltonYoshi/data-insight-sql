@@ -1,0 +1,28 @@
+name: Execute Jupyter Notebook
+
+on:
+  schedule:
+    - cron: '0 4 * * *' 
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt  
+
+      - name: Executar códigos
+        run: hub.py
