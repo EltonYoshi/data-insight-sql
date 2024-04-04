@@ -96,11 +96,12 @@ dtype_mapping = {
     'GENERO': VARCHAR(50),
     'DATA': DATE()
 }
-data = df.at[0, 'DATA']
+data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
 
 query = f"SELECT COUNT(*) FROM {table_name} WHERE DATA = '{data}'"
 conn = engine.connect()
-result = conn.execute(query)
+result = conn.execute(query, (data,))
+
 
 num_rows = result.fetchone()[0]
 
