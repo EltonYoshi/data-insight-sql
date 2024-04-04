@@ -22,9 +22,6 @@ jobs:
       
       - name: Instalar Dependencias
         run: pip install -r requirements.txt  
-
-      - name: Navegar para o diretório do script
-        run: cd aws-mysql-python  # Substitua pelo caminho real
         
       - name: Executar códigos
         run: python hub.py
