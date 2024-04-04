@@ -112,3 +112,5 @@ else:
     print("Já existem dados com a mesma data na tabela. Os dados não foram importados.")
 
 conn.close()
+
+#commit de teste
