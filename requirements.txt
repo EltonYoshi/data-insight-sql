@@ -2,3 +2,4 @@ facebook-business
 pandas
 sqlalchemy 
 numpy
+pymysql
