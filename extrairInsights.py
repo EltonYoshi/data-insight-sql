@@ -98,9 +98,9 @@ dtype_mapping = {
     'GENERO': VARCHAR(50),
     'DATA': DATE()
 }
-df['DATA'] = pd.to_datetime(df['DATA'])
-
 data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
+
+data = pd.to_datetime(df.at[0, 'DATA']).date()
 
 conn = engine.connect()
 data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
