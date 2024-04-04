@@ -1,5 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine, VARCHAR, INT, FLOAT, DATE
+from sqlalchemy.sql import text
+
 
 
 from datetime import datetime
@@ -102,7 +104,8 @@ data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
 
 conn = engine.connect()
 data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
-query = f"SELECT COUNT(*) FROM {table_name} WHERE DATA = :data"
+query = text("SELECT COUNT(*) FROM insights_ads_2024 WHERE DATA = :data")
+# Execute a consulta passando o parâmetro 'data'
 result = conn.execute(query, {'data': data})
 
 num_rows = result.fetchone()[0]
