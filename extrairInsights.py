@@ -99,7 +99,8 @@ dtype_mapping = {
 data = df.at[0, 'DATA']
 
 query = f"SELECT COUNT(*) FROM {table_name} WHERE DATA = '{data}'"
-result = engine.execute(query)
+conn = engine.connect()
+result = conn.execute(query)
 
 num_rows = result.fetchone()[0]
 
@@ -109,3 +110,5 @@ if num_rows == 0:
     print("Dados importados com sucesso!")
 else:
     print("Já existem dados com a mesma data na tabela. Os dados não foram importados.")
+
+conn.close()
