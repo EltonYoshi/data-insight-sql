@@ -24,4 +24,7 @@ jobs:
         run: pip install -r requirements.txt  
         
       - name: Executar códigos
-        run: python hub.py
+        run: python extrairInsights.py
+
+      - name: Executar códigos
+        run: python extrairIDs.py
