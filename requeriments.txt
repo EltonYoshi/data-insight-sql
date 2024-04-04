@@ -2,7 +2,6 @@ facebook-business
 datetime
 pandas
 sqlalchemy 
-subprocess
 numpy
 math
 pickle
