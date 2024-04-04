@@ -44,8 +44,8 @@ fields_dados_base = [
 ]
 
 params_dados_base = {
-  'time_range': {'since': '2024-04-02', 'until': '2024-04-02'},
-  #'date_preset': 'yesterday',
+  #'time_range': {'since': '2024-04-02', 'until': '2024-04-02'},
+  'date_preset': 'yesterday',
   'level': 'ad',
   'breakdowns': ['age', 'gender']
 }
