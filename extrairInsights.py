@@ -45,7 +45,7 @@ fields_dados_base = [
 ]
 
 params_dados_base = {
-  #'time_range': {'since': '2024-04-02', 'until': '2024-04-02'},
+  #'time_range': {'since': '2024-04-04', 'until': '2024-04-04'},
   'date_preset': 'yesterday',
   'level': 'ad',
   'breakdowns': ['age', 'gender']
@@ -101,7 +101,7 @@ dtype_mapping = {
 data = df.at[0, 'DATA']
 metadata = MetaData()
 user_table = Table(table_name, metadata, autoload_with=engine)
-stmt = select(user_table).where(user_table.c.DATA == '2024-04-06')
+stmt = select(user_table).where(user_table.c.DATA == data)
 
 with engine.connect() as conn:
   result = conn.execute(stmt)
