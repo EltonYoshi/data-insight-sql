@@ -1,7 +1,6 @@
 import pandas as pd
 from sqlalchemy import create_engine, VARCHAR, INT, FLOAT, DATE
-from sqlalchemy.sql import text
-
+from sqlalchemy import create_engine, MetaData, Table, select, text
 
 
 from datetime import datetime
@@ -23,7 +22,7 @@ db_name = 'insights'
 engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}")
 
 # Nome da tabela
-table_name = 'insights_ads_2024'
+table_name = "insights_ads_2024"
 
 #Facebook Credentials
 my_app_id = '1910236629370257'
@@ -66,56 +65,57 @@ def acoes_especificas(insight, valor):
 
 
 def dados_insights(fields, params):
-    insights = my_account.get_insights(fields=fields, params=params)
+  insights = my_account.get_insights(fields=fields, params=params)
 
-    dados = []
+  dados = []
 
-    for insight in insights:
-      valores_especificos = []
+  for insight in insights:
+    valores_especificos = []
 
-      for valor in valores:
-        valor_acao = acoes_especificas(insight, valor)
-        valores_especificos.append(valor_acao)
+    for valor in valores:
+      valor_acao = acoes_especificas(insight, valor)
+      valores_especificos.append(valor_acao)
         
-      dados.append([insight[fields[0]],insight[fields[1]],insight[fields[2]], insight[fields[3]], insight[fields[4]], insight[fields[5]], insight[fields[6]], *valores_especificos, insight['age'], insight['gender'], insight[fields[8]]])
+    dados.append([insight[fields[0]],insight[fields[1]],insight[fields[2]], insight[fields[3]], insight[fields[4]], insight[fields[5]], insight[fields[6]], *valores_especificos, insight['age'], insight['gender'], insight[fields[8]]])
 
-    return dados
+  return dados
 
 base_dados = dados_insights(fields_dados_base, params_dados_base)
+
 df = pd.DataFrame(base_dados, columns=colunas)
 
 dtype_mapping = {
-    'CAMPANHA_ID': VARCHAR(255),
-    'CONJUNTO_ID': VARCHAR(255),
-    'AD_ID': VARCHAR(255),
-    'IMPRESSOES': INT(),
-    'ALCANCE': INT(),
-    'CLICKS': INT(),
-    'VALOR_USADO': FLOAT(),
-    'CLICK_LINK': INT(),
-    'RESULTADOS': INT(),
-    'IDADE': VARCHAR(50),
-    'GENERO': VARCHAR(50),
-    'DATA': DATE()
+  'CAMPANHA_ID': VARCHAR(255),
+  'CONJUNTO_ID': VARCHAR(255),
+  'AD_ID': VARCHAR(255),
+  'IMPRESSOES': INT(),
+  'ALCANCE': INT(),
+  'CLICKS': INT(),
+  'VALOR_USADO': FLOAT(),
+  'CLICK_LINK': INT(),
+  'RESULTADOS': INT(),
+  'IDADE': VARCHAR(50),
+  'GENERO': VARCHAR(50),
+  'DATA': DATE()
 }
-data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
+data = df.at[0, 'DATA']
+metadata = MetaData()
+user_table = Table(table_name, metadata, autoload_with=engine)
+stmt = select(user_table).where(user_table.c.DATA == '2024-04-06')
 
-data = pd.to_datetime(df.at[0, 'DATA']).date()
+with engine.connect() as conn:
+  result = conn.execute(stmt)
+  row_data = result.fetchone()
 
-conn = engine.connect()
-data = df.at[0, 'DATA'].strftime('%Y-%m-%d')
-query = text("SELECT COUNT(*) FROM insights_ads_2024 WHERE DATA = :data")
-# Execute a consulta passando o parâmetro 'data'
-result = conn.execute(query, {'data': data})
-
-num_rows = result.fetchone()[0]
-
-
-if num_rows == 0:
-    df.to_sql(name=table_name, con=engine, if_exists='append', index=False, dtype=dtype_mapping)
-    print("Dados importados com sucesso!")
+  
+if row_data == None:
+  df.to_sql(name=table_name, con=engine, if_exists='append', index=False, dtype=dtype_mapping)
+  print("Dados importados com sucesso!")
 else:
-    print("Já existem dados com a mesma data na tabela. Os dados não foram importados.")
+  print("Já existem dados com a mesma data na tabela. Os dados não foram importados.")
 
-conn.close()
+
+    
+#df.to_sql(name=table_name, con=engine, if_exists='append', index=False, dtype=dtype_mapping)
+
 
